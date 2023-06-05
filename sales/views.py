@@ -9,6 +9,7 @@ from sales.serializers import PlanDescriptionSerializer, PlanSerializer
 from sales.constants import ErrorMessages, SuccessMessages, PERMITTED_OPERATIONS
 from users.models import Customer, Seller
 from helpsystem_api.messages import ReturnBaseMessage
+from utils.qrcode import generate_qr
 
 
 class PlanDescriptionView(APIView):
@@ -26,6 +27,10 @@ class SaleView(APIView):
 
     def post(self, request, **kwargs):
         '''Criação de uma venda '''
+
+        print('\n\n QRCODE:', generate_qr('teste', 'test'))
+        return ReturnBaseMessage().message
+
         try:
             data_customer = request.data['customer']
             data_plan = request.data['plan']

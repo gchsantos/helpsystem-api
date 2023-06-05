@@ -1,5 +1,12 @@
 from django.contrib import admin
 
-from .models import CommonUser
+from .models import CommonUser, Customer, Seller
 
-admin.site.register(CommonUser)
+
+class CommonAdmin(admin.ModelAdmin):
+    readonly_fields = ('common_id',)
+
+
+admin.site.register(Customer, CommonAdmin)
+admin.site.register(Seller, CommonAdmin)
+admin.site.register(CommonUser, CommonAdmin)

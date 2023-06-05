@@ -19,10 +19,15 @@ from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
 from users.views import UserCreate
+from sales.views import PlanDescriptionView, SaleView, PlanView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/', UserCreate.as_view(), name='Register'),
-    path('account/auth', obtain_auth_token, name='Authenticate'),
+    path('account/', UserCreate.as_view(), name='Registrar'),
+    path('account/auth', obtain_auth_token, name='Autenticar'),
+    path('plans-description/', PlanDescriptionView.as_view(), name='Descricao de Planos'),
+    path('plan/', PlanView.as_view(), name='Listagem de Planos'),
+    path('plan/<uuid:plan_id>/', PlanView.as_view(), name='Alterar Venda'),
+    path('sale/', SaleView.as_view(), name='Venda'),
 ]

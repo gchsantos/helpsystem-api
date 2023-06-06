@@ -35,6 +35,6 @@ urlpatterns = [
     path('sale/<uuid:sale_id>/', SaleView.as_view(), name='Venda'),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.QRCODES_URL,
-                          document_root=settings.QRCODES_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.QRCODES_URL, document_root=settings.QRCODES_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

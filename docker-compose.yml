@@ -10,10 +10,10 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: helpsystem_api.settings.production
       MODE: PROD
+    volumes:
+      - "api-dbdata:/app/db"
     ports:
       - 8000:8000
-    networks:
-      - back-tier
 
-networks:
-  back-tier:
+volumes:
+  api-dbdata:

@@ -1,4 +1,3 @@
-import time
 from datetime import datetime
 
 from django.conf import settings
@@ -81,7 +80,7 @@ class SaleView(APIView):
 
         return ReturnBaseMessage(
             code=status.HTTP_201_CREATED, detail=SuccessMessages.SELL_CREATED,
-            plan_id=created_sale.id).message
+            sale_id=created_sale.id).message
 
     def get(self, request, sale_id, **kwargs):
 

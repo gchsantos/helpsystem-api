@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  api:
+    build:
+      context: .
+    image: helpsystem_api
+    command: './start-server.sh'
+    environment:
+      DJANGO_SETTINGS_MODULE: helpsystem_api.settings.production
+      MODE: PROD
+    ports:
+      - 8000:8000
+    networks:
+      - back-tier
+
+networks:
+  back-tier:

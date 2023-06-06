@@ -15,6 +15,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
@@ -28,6 +30,11 @@ urlpatterns = [
     path('account/auth', obtain_auth_token, name='Autenticar'),
     path('plans-description/', PlanDescriptionView.as_view(), name='Descricao de Planos'),
     path('plan/', PlanView.as_view(), name='Listagem de Planos'),
-    path('plan/<uuid:plan_id>/', PlanView.as_view(), name='Alterar Venda'),
-    path('sale/', SaleView.as_view(), name='Venda'),
+    path('plan/<uuid:plan_id>/', PlanView.as_view(), name='Alterar Plano'),
+    path('sale/', SaleView.as_view(), name='Listagem de Vendas'),
+    path('sale/<uuid:sale_id>/', SaleView.as_view(), name='Venda'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.QRCODES_URL,
+                          document_root=settings.QRCODES_ROOT)

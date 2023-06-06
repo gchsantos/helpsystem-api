@@ -1,14 +1,19 @@
+import time
 from datetime import datetime
 
+from django.conf import settings
+from django.shortcuts import render
 from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework import status
+from pypix import Pix
 
 from sales.models import PlanDescription, Sale, Plan
 from sales.serializers import PlanDescriptionSerializer, PlanSerializer
 from sales.constants import ErrorMessages, SuccessMessages, PERMITTED_OPERATIONS
 from users.models import Customer, Seller
 from helpsystem_api.messages import ReturnBaseMessage
+from utils.qrcode import generate_qr
 
 
 class PlanDescriptionView(APIView):
@@ -45,15 +50,15 @@ class SaleView(APIView):
                 return ReturnBaseMessage(
                     False, ErrorMessages.PLAN_ALREADY_EXIST, status.HTTP_400_BAD_REQUEST).message
 
-        except Customer.DoesNotExist as err:  # Quando o cliente não existe
+        except Customer.DoesNotExist:  # Quando o cliente não existe
             return ReturnBaseMessage(
                 success=False, details=ErrorMessages.CUSTOMER_DOES_NOT_EXIST,
                 code=status.HTTP_400_BAD_REQUEST).message
-        except Seller.DoesNotExist as err:  # Quando o vendedor não existe
+        except Seller.DoesNotExist:  # Quando o vendedor não existe
             return ReturnBaseMessage(
                 success=False, detail=ErrorMessages.SELLER_DOES_NOT_EXIST,
                 code=status.HTTP_400_BAD_REQUEST).message
-        except PlanDescription.DoesNotExist as err:  # Quando o plano não existe
+        except PlanDescription.DoesNotExist:  # Quando o plano não existe
             return ReturnBaseMessage(
                 success=False, detail=ErrorMessages.PLAN_DESC_DOES_NOT_EXIST,
                 code=status.HTTP_400_BAD_REQUEST).message
@@ -74,8 +79,34 @@ class SaleView(APIView):
                 customer=customer
             ).save()
 
-        return ReturnBaseMessage(code=status.HTTP_201_CREATED,
-                                 detail=SuccessMessages.SELL_CREATED).message
+        return ReturnBaseMessage(
+            code=status.HTTP_201_CREATED, detail=SuccessMessages.SELL_CREATED,
+            plan_id=created_sale.id).message
+
+    def get(self, request, sale_id, **kwargs):
+
+        # Validações
+        try:
+            sale = Sale.objects.get(id=sale_id)
+        except Sale.DoesNotExist:  # Quando o plano não existe
+            return ReturnBaseMessage(
+                success=False, detail=ErrorMessages.SALE_DOES_NOT_EXIST,
+                code=status.HTTP_400_BAD_REQUEST).message
+
+        pix = Pix()
+        pix.pixkey = settings.PIX_KEY
+        pix.description = f"{settings.PIX_DESCRIPTION}{sale.plan_desc.name}"
+        pix.merchant_name = settings.PIX_MERCHANT_NAME
+        pix.merchant_city = settings.PIX_MERCHANT_CITY
+        pix.txid = settings.PIX_MERCHANT_NAME
+        pix.amount = str(sale.plan_desc.value)
+
+        qr_name = f"{sale.id}"
+        qr_url = generate_qr(str(pix), qr_name)
+
+        return render(
+            request, 'sale_success.html',
+            {'qrcode_path': qr_url, 'pix_code': str(pix)})
 
 
 class PlanView(APIView):

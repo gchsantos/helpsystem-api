@@ -58,7 +58,7 @@ ROOT_URLCONF = 'helpsystem_api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,3 +118,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PIX_KEY = 'gchsantos@gmail.com'
+PIX_DESCRIPTION = 'HelpSystem Plano '
+PIX_MERCHANT_NAME = 'HELPSYSTEMLTDA'
+PIX_MERCHANT_CITY = 'Bebedouro - SP'
+
+QRCODES_URL = '/media/qrcodes/'
+QRCODES_ROOT = BASE_DIR / 'media/qrcodes'

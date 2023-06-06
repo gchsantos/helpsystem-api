@@ -38,7 +38,7 @@ class Plan(models.Model):
     plan_desc = models.ForeignKey(
         PlanDescription, on_delete=models.CASCADE, null=False)
     sale = models.OneToOneField(
-        Sale, on_delete=models.CASCADE, null=False, related_name='sale')
+        Sale, on_delete=models.CASCADE, null=False, related_name='plan')
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, null=False, related_name='plans')
     deactivated_at = models.DateField(null=True)

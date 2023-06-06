@@ -20,13 +20,14 @@ from django.conf.urls.static import static
 from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 
-from users.views import UserCreate
+from users.views import CustomerCreate, SellerCreate
 from sales.views import PlanDescriptionView, SaleView, PlanView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/', UserCreate.as_view(), name='Registrar'),
+    path('customer/', CustomerCreate.as_view(), name='Cadastrar Cliente'),
+    path('seller/', SellerCreate.as_view(), name='Cadastrar Vendedor'),
     path('account/auth', obtain_auth_token, name='Autenticar'),
     path('plans-description/', PlanDescriptionView.as_view(), name='Descricao de Planos'),
     path('plan/', PlanView.as_view(), name='Listagem de Planos'),

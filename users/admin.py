@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import CommonUser, Customer, Seller
+from .models import CommonUser, Customer, Seller, Phone, Address
 
 
 class CommonAdmin(admin.ModelAdmin):
@@ -10,3 +10,4 @@ class CommonAdmin(admin.ModelAdmin):
 admin.site.register(Customer, CommonAdmin)
 admin.site.register(Seller, CommonAdmin)
 admin.site.register(CommonUser, CommonAdmin)
+admin.site.register([Phone, Address])

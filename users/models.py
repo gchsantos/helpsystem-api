@@ -21,22 +21,22 @@ class CommonUser(User):
         ordering = ['date_joined']
 
 
-class Phones(models.Model):
+class Phone(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         CommonUser, on_delete=models.CASCADE, null=True, related_name='phones')
-    number = models.CharField(null=True, max_length=10)
+    number = models.CharField(max_length=11)
 
 
-class Adress(models.Model):
+class Address(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         CommonUser, on_delete=models.CASCADE, null=True,
-        related_name='adresses')
+        related_name='addresses')
     neighborhood = models.CharField(null=True, max_length=100)
     number = models.CharField(null=True,  max_length=100)
     complement = models.CharField(null=True, max_length=100)
-    city = models.CharField(null=True, max_length=100)
+    city = models.CharField(max_length=100)
 
 
 class Customer(CommonUser):

@@ -6,6 +6,4 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-WORKDIR /app
-
 RUN chmod +x start-server.sh

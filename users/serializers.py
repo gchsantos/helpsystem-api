@@ -21,7 +21,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ('username', 'password', 'email', 'cpf', 'gender', 'birth',
-                  'is_superuser', 'first_name', 'last_name', 'phone', 'address')
+                  'first_name', 'last_name', 'phone', 'address', 'common_id')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -31,9 +31,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
         user = Customer(**validated_data)
         user.set_password(password)
-        user.is_staff, user.is_superuser = (
-            True, True) if validated_data.pop('is_superuser') else (
-            False, False)
+        user.is_staff, user.is_superuser = (False, False)
         user.save()
 
         if phone:
@@ -48,8 +46,8 @@ class CustomerSerializer(serializers.ModelSerializer):
 class SellerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seller
-        fields = ('username', 'password', 'email', 'cpf', 'gender',
-                  'birth', 'is_superuser', 'first_name', 'last_name')
+        fields = ('username', 'password', 'email', 'cpf', 'gender', 'birth',
+                  'is_superuser', 'first_name', 'last_name', 'common_id')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):

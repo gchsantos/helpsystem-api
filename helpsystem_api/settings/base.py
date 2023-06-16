@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from os.path import join
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,12 +25,13 @@ SECRET_KEY = 'django-insecure-byy%v_ipsufthx-eo=abn5zs08=kmamyh!s74zk7=ewlvphhav
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:5000',
 )
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5000',]
 
 # Application definition
 
@@ -135,3 +135,10 @@ PIX_MERCHANT_CITY = 'Bebedouro - SP'
 
 QRCODES_URL = '/media/qrcodes'
 QRCODES_ROOT = BASE_DIR / 'media/qrcodes'
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "helpsystem_api.authentications.BearerAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAdminUser"),
+}

@@ -1,11 +1,11 @@
-version: '3'
+version: "3.0"
 
 services:
 
   api:
-    build:
-      context: .
-    image: helpsystem_api
+    container_name: api_helpsystem
+    hostname: helpsystem-api
+    image: gchsantos/helpsystem_api:latest
     command: './start-server.sh'
     environment:
       DJANGO_SETTINGS_MODULE: helpsystem_api.settings.production
@@ -14,6 +14,23 @@ services:
       - "api-dbdata:/app/db"
     ports:
       - 8000:8000
+    networks:
+      - backend
+
+  frontend:
+    container_name: frontend_helpsystem
+    hostname: frontend
+    image: gchsantos/helpsystem_frontend:latest
+    command: 'npm run start'
+    ports:
+      - 5000:5000
+    networks:
+      - frontend
+      - backend
 
 volumes:
   api-dbdata:
+
+networks:
+  frontend:
+  backend:

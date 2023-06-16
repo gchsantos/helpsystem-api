@@ -1,0 +1,296 @@
+{
+	"info": {
+		"_postman_id": "13a3f683-2bd9-46d1-a17e-aad55db04968",
+		"name": "HelpSystemAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6945229"
+	},
+	"item": [
+		{
+			"name": "Create Customer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"cliente\",\r\n    \"first_name\": \"Cliente\",\r\n    \"last_name\": \"Teste\",\r\n    \"email\": \"cliente@teste.com\",\r\n    \"password\": \"123\",\r\n    \"cpf\": \"428754828\",\r\n    \"gender\": 0,\r\n    \"birth\": \"1998-05-11\",\r\n    \"phone\": {\r\n        \"number\": \"17988352035\"\r\n    },\r\n    \"address\": {\r\n        \"city\": \"Barretos\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/customer/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"customer",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Seller",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"vendedor\",\r\n    \"first_name\": \"Vendedor\",\r\n    \"last_name\": \"Silva\",\r\n    \"email\": \"vendedor@teste.com\",\r\n    \"password\": \"123\",\r\n    \"cpf\": \"428754851\",\r\n    \"gender\": 0,\r\n    \"birth\": \"1998-05-11\",\r\n    \"phone\": {\r\n        \"number\": \"17988352035\"\r\n    },\r\n    \"address\": {\r\n        \"city\": \"Barretos\"\r\n    },\r\n    \"is_superuser\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/seller/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"seller",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"cliente\",\n    \"password\": \"123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/account/auth/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"account",
+						"auth",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Description of Plans",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/plans-description/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"plans-description",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Make Sale",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "c059646cb66f3b5f890030676d6578370041271d",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"plan\": \"3b6f9b14-abb2-4c92-b972-c505672fcd97\",\r\n    \"seller\": \"4bb2d542-6880-4c82-ad86-886b5264530e\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/sale/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"sale",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List customer plans",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/plan/?active=true",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"plan",
+						""
+					],
+					"query": [
+						{
+							"key": "active",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Sale PIX",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/sale/0dff1d14-bee5-41bf-9303-d528e420718b/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"sale",
+						"0dff1d14-bee5-41bf-9303-d528e420718b",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deactivate Plan",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"operation\": \"deactivate\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/plan/d2cfb597-f2b8-45d2-abd8-f047f6baf502/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"plan",
+						"d2cfb597-f2b8-45d2-abd8-f047f6baf502",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get CommonUser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "c059646cb66f3b5f890030676d6578370041271d",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/account/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"account",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

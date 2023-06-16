@@ -5,18 +5,22 @@ from django.shortcuts import render
 from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.request import Request
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from pypix import Pix
 
 from sales.models import PlanDescription, Sale, Plan
 from sales.serializers import PlanDescriptionSerializer, PlanSerializer
 from sales.constants import ErrorMessages, SuccessMessages, PERMITTED_OPERATIONS
-from users.models import Customer, Seller
+from users.models import CommonUser, Customer, Seller
 from helpsystem_api.messages import ReturnBaseMessage
 from utils.qrcode import generate_qr
 
 
 class PlanDescriptionView(APIView):
     '''View de descrição dos Planos'''
+
+    permission_classes = [AllowAny]  # TODO: Change for only authenticated or admin
 
     def get(self, request, **kwargs):
         '''Serve para listar a descrição de todos os tipos de planos'''
@@ -28,10 +32,19 @@ class PlanDescriptionView(APIView):
 class SaleView(APIView):
     ''' View de vendas '''
 
-    def post(self, request, **kwargs):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request, **kwargs):
         '''Criação de uma venda '''
+
         try:
-            data_customer = request.data['customer']
+            common_user: CommonUser = CommonUser.objects.get(user_ptr=request.user)
+        except CommonUser.DoesNotExist:
+            return ReturnBaseMessage(
+                success=False, detail=ErrorMessages.COMMONUSER_DOES_NOT_EXIST,
+                code=status.HTTP_400_BAD_REQUEST).message
+
+        try:
             data_plan = request.data['plan']
             data_seller = request.data['seller']
         except KeyError as err:
@@ -41,17 +54,21 @@ class SaleView(APIView):
 
         # Validações
         try:
-            customer = Customer.objects.get(common_id=data_customer)
+            customer = Customer.objects.get(common_id=common_user.common_id)
             plan = PlanDescription.objects.get(id=data_plan)
             seller = Seller.objects.get(common_id=data_seller)
 
-            if customer.get_activated_plan():
-                return ReturnBaseMessage(
-                    False, ErrorMessages.PLAN_ALREADY_EXIST, status.HTTP_400_BAD_REQUEST).message
+            activated_plan = customer.get_activated_plan()
+            if activated_plan:
+                return ReturnBaseMessage(False,
+                                         ErrorMessages.PLAN_ALREADY_EXIST,
+                                         status.HTTP_400_BAD_REQUEST,
+                                         sale_id=activated_plan.sale.id
+                                         ).message
 
         except Customer.DoesNotExist:  # Quando o cliente não existe
             return ReturnBaseMessage(
-                success=False, details=ErrorMessages.CUSTOMER_DOES_NOT_EXIST,
+                success=False, detail=ErrorMessages.CUSTOMER_DOES_NOT_EXIST,
                 code=status.HTTP_400_BAD_REQUEST).message
         except Seller.DoesNotExist:  # Quando o vendedor não existe
             return ReturnBaseMessage(
@@ -82,8 +99,11 @@ class SaleView(APIView):
             code=status.HTTP_201_CREATED, detail=SuccessMessages.SELL_CREATED,
             sale_id=created_sale.id).message
 
-    def get(self, request, sale_id, **kwargs):
 
+class SalePaymentView(APIView):
+    permission_classes = [AllowAny]  # TODO: Change for only authenticated or admin
+
+    def get(self, request, sale_id, **kwargs):
         # Validações
         try:
             sale = Sale.objects.get(id=sale_id)
@@ -110,6 +130,8 @@ class SaleView(APIView):
 
 class PlanView(APIView):
     ''' View para os planos dos usuários'''
+
+    permission_classes = [AllowAny]  # TODO: Change for only authenticated or admin
 
     def get(self, request, **kwargs):
         '''Serve para listar os planos ativos dos usuários'''

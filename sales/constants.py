@@ -1,6 +1,7 @@
 
 class ErrorMessages:
     MISSING_VALUE_MESSAGE = 'Preencha o campos do formulário: '
+    COMMONUSER_DOES_NOT_EXIST = 'Usuário inexistente.'
     CUSTOMER_DOES_NOT_EXIST = 'Cliente inexistente.'
     SELLER_DOES_NOT_EXIST = 'Vendedor inexistente.'
     PLAN_DESC_DOES_NOT_EXIST = 'Plano inexistente.'

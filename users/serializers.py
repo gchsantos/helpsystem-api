@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from users.models import Customer, Seller, Phone, Address
+from rest_framework.authtoken.models import Token
+
+from users.models import CommonUser, Customer, Seller, Phone, Address
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -12,6 +14,21 @@ class PhoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = Phone
         fields = ('number',)
+
+
+class CommonUserSerializer(serializers.ModelSerializer):
+    phone = PhoneSerializer(required=False)
+    address = AddressSerializer(required=False)
+    token = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CommonUser
+        fields = ('username', 'password', 'email', 'cpf', 'gender', 'birth',
+                  'first_name', 'last_name', 'phone', 'address', 'common_id', 'token')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def get_token(self, instance: CommonUser):
+        return Token.objects.get(user=instance.user_ptr).key
 
 
 class CustomerSerializer(serializers.ModelSerializer):

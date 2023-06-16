@@ -18,22 +18,24 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from rest_framework.authtoken.views import obtain_auth_token
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authtoken.views import ObtainAuthToken
 
-from users.views import CustomerCreate, SellerCreate
-from sales.views import PlanDescriptionView, SaleView, PlanView
+from users.views import CustomerCreate, SellerCreate, CommonUserView
+from sales.views import PlanDescriptionView, SaleView, SalePaymentView, PlanView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('customer/', CustomerCreate.as_view(), name='Cadastrar Cliente'),
     path('seller/', SellerCreate.as_view(), name='Cadastrar Vendedor'),
-    path('account/auth', obtain_auth_token, name='Autenticar'),
+    path('account/auth/', csrf_exempt(ObtainAuthToken.as_view()), name='Autenticar'),
+    path('account/', CommonUserView.as_view(), name='CommonUser'),
     path('plans-description/', PlanDescriptionView.as_view(), name='Descricao de Planos'),
     path('plan/', PlanView.as_view(), name='Listagem de Planos'),
     path('plan/<uuid:plan_id>/', PlanView.as_view(), name='Alterar Plano'),
     path('sale/', SaleView.as_view(), name='Listagem de Vendas'),
-    path('sale/<uuid:sale_id>/', SaleView.as_view(), name='Venda'),
+    path('sale/<uuid:sale_id>/', SalePaymentView.as_view(), name='Pagamento da Venda'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
